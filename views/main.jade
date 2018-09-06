@@ -1,0 +1,77 @@
+header
+    table
+        tbody
+            tr
+                td(id='logoCell')
+                td
+                    -for(i=0;i<headers.length;++i){
+                    h1(class="headertext")=headers[i]
+                    -if (headers.length-1 === i)
+                    -}
+
+
+main
+    div(id='slider')
+        div(id='arrow-left')
+        div(id='visible-image')
+            ul
+                -for (i=0; i<sliderItems.length; ++i){
+                    - var head = sliderItems[i].head;
+                    li(class="slider-item")
+                        h2(class="headertext")= head
+                        div(class="slider-image" style="background-image:#{sliderItems[i].imageHref};")
+                -}
+        div(id='arrow-right')
+
+
+    div(id='contacts-wrap')
+        h2(class="headertext") подача заявок круглосуточно
+            div
+        div(id='contacts')
+            ul(id='messangers')
+                -for(i=0;i<messangers.length; ++i){
+                li(class='button-action')
+                    a(href=messangers[i]['href'] class='messangers')
+                        div(class='icon-container')
+                            img(class='messangers-icons' src=messangers[i]['icon'])
+                -}
+            ul(id='phones')
+                -for(i=0;i<phones.length; ++i){
+                li(class='button-action')
+                    a(href='tel:' + phones[i].replace(/['(',')',' ', '\-']/gi, '') class='phones')=phones[i]
+                -}
+    div(id='footer-menu-windows')
+        div(id='map-wrap' style="display:none;")
+            h3(class="headertext") Где мы работаем
+                img(src="/images/icons/location.png")
+                div(class="close-button button-action" onclick="showElement(this, this.parentNode.parentNode)")
+            ul
+                li(id='static-map')
+                    img(src='/images/mapArea.png')
+                li(id='google-map')
+        div(id='gallery-wrap' style="display:none;")
+            div(id='photos')
+                h3 Фото
+                    div(class="close-button button-action")
+            div(id='videos')
+                h3 Видео
+                    div(class="close-button button-action")
+                iframe(width="112" height="63" src="https://www.youtube.com/embed/XOIfBhSmoOc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+
+        div(id='socials-wrap' style="display:none;")
+            h3
+                div(class="close-button button-action" onclick="showElement(this, this.parentNode.parentNode)")
+            a(href='https://www.facebook.com/groups/722093081269451/')
+                img(src='/images/icons/facebook.png')
+
+
+footer
+    menu
+        mixin listItem(name, clickFunc)
+            li.footer-item.button-action(onclick=clickFunc)
+                h3(class='headertext')=name
+        +listItem("Почему мы", "whoami")
+        +listItem("Цены", "price")
+        +listItem("Социальные сети", "showElement(this, $('#socials-wrap'))")
+        +listItem("Фото-Видео", "gallery")
+        +listItem("Карта", "showElement(this, $('#map-wrap'))")

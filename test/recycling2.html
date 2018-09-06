@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        var startTime = Date.now();
+    </script>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            margin: 0px;
+            background-color: gainsboro;
+        }
+    </style>
+    <title>Canvas</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight-4;
+    var ctx = canvas.getContext('2d');
+
+
+
+    var recyclingArrows = Recycling(canvas.height/3, {x:canvas.width/2, y: canvas.height/3}, 10000);
+
+    canvas.ondblclick = function (ev) {
+        clearInterval(window.timer);
+        return;
+    };
+    function Recycling (height, topPoint, time) {
+
+        var step = 1/time;
+        var comleteAnimationPart = 0;
+
+        var arrows = [
+            {
+                pathLength: (height*0.5773502691896258),
+                top:{},
+                headBottom:{},
+                headBottomLeft:{},
+                headBottomRight:{},
+                bodyTurnPointsLeft:[{
+                    x: topPoint.x - height*0.4718815191896258,
+                    y: topPoint.y + height*0.90625
+                },{
+                    x: topPoint.x - height*0.6585401507944169,
+                    y: topPoint.y + height*0.953125
+                }],
+                bodyTurnPointsRight: [{
+                    x: topPoint.x - height*0.4718815191896258,
+                    y: topPoint.y + height*1.09375
+                },{
+                    x: topPoint.x - height*0.4961603875848346,
+                    y: topPoint.y + height*1.046875
+                }]
+            },
+            {
+                pathLength: (height*0.5773502691896258),
+                top: {},
+                headBottom:{},
+                headBottomRight:{},
+                headBottomLeft:{},
+                bodyTurnPointsRight:[{
+                    x: topPoint.x - height*0.1339242566047911,
+                    y: topPoint.y + height*0.04446361680539
+                },{
+                    x: topPoint.x - height*0.0811898816047911,
+                    y: topPoint.y + height*0.046875
+                }],
+                bodyTurnPointsLeft: [{
+                    x: topPoint.x + height*0.0284555066047911,
+                    y: topPoint.y + height*0.13821361680539
+                },{
+                    x: topPoint.x + height*0.0811898816047911,
+                    y: topPoint.y - height*0.046875
+                }]
+            },
+            {
+                pathLength: height*1.154700538379252,
+                top:{},
+                headBottom:{},
+                headBottomLeft:{},
+                headBottomRight:{},
+                bodyTurnPointsLeft:[{
+                    x: topPoint.x + height*0.4434260125848346,
+                    y: topPoint.y + height*0.95553638319461
+                },{
+                    x: topPoint.x + height*0.5773502691896258,
+                    y: topPoint.y + height*1.09375
+                }],
+                bodyTurnPointsRight: [{
+                    x: topPoint.x + height*0.6058057757944169,
+                    y: topPoint.y + height*0.86178638319461
+                },{
+                    x: topPoint.x + height*0.5773502691896258,
+                    y: topPoint.y + height*0.90625
+                }]
+            }
+        ];
+        Object.defineProperties(arrows, {
+            turnHead: {
+                get: function () {
+                    return comleteAnimationPart<0.09133861680539
+                }
+            },
+            turnBody: {
+                get: function () {
+                    return comleteAnimationPart>=0.09133861680539 && comleteAnimationPart<0.6480692335239575
+                }
+            }
+
+        });
+
+        Object.defineProperties(arrows[0].top, {
+            x: {
+                get: function () {
+                    return topPoint.x - height*0.5773502691896258*(1-comleteAnimationPart);
+                }
+            },
+            y: {
+                get: function () {
+                    return topPoint.y + height*(1-comleteAnimationPart)
+                }
+            }
+        });
+        Object.defineProperties(arrows[0].headBottom, {
+            x:{
+                get: function () {
+                    return (arrows.turnHead)?
+                        topPoint.x -height*(0.4718815191896258 + 1.154700538379252*comleteAnimationPart):
+                        arrows[0].top.x - height*0.052734375;
+                }
+            },
+            y: {
+                get: function () {
+                    return (arrows.turnHead)?
+                        topPoint.y + height:
+                        arrows[0].top.y + height*0.09133861680539;
+                }
+            }
+        });
+        Object.defineProperties(arrows[0].headBottomLeft, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        return topPoint.x - height*(0.47188151918962584 + 2.9324783161570305*comleteAnimationPart);
+                    } else {
+                        return topPoint.x - height*(0.792464407399208 - 0.5773502691896258*comleteAnimationPart);
+                    }
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        return topPoint.y + height*(0.8125 + 1.026400478559335*comleteAnimationPart);
+                    } else {
+                        return topPoint.y + height*(0.9975886168053898-comleteAnimationPart);
+                    }
+                }
+            }
+        });
+        Object.defineProperties(arrows[0].headBottomRight, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        return topPoint.x + height*(0.6230772393985262*comleteAnimationPart - 0.4718815191896259);
+                    } else {
+                        return arrows[0].top.x + 0.10964538820958222*height;
+                    }
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 0.375/(0.421875 - 0.6495190528383289*height);
+                        var b = (topPoint.y + height) + (height*0.375)/2 - k*((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875));
+                    } else {
+                        k = -1.732050807568877;
+                        b = (topPoint.y + height) + (height*0.375)/4 - k*((topPoint.x - ((height*0.5773502691896258))) + 1.732050807568877*(height*0.375)/4);
+                    }
+                    return k*arrows[0].headBottomRight.x + b;
+                }
+            }
+        });
+
+        Object.defineProperty(arrows[0], "headTurnPointLeft", {
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: arrows[0].headBottom.x*((height*0.375)*1.732050807568877)/(4*(height*0.10546875)) + (topPoint.x - ((height*0.5773502691896258))) - ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*((height*0.375)*1.732050807568877)/(4*(height*0.10546875)),
+                        y: arrows[0].headBottom.x*(height*0.375)/(4*(height*0.10546875)) + (topPoint.y + height) - ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*(height*0.375)/(4*(height*0.10546875))
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+        Object.defineProperty(arrows[0], "headTurnPointRight",{
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: - arrows[0].headBottom.x*((height*0.375)*1.732050807568877)/(4*(height*0.10546875)) + (topPoint.x - ((height*0.5773502691896258))) + ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*((height*0.375)*1.732050807568877)/(4*(height*0.10546875)),
+                        y: - arrows[0].headBottom.x*((height*0.375))/(4*(height*0.10546875)) +  (topPoint.y + height) + ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*(height*0.375)/(4*(height*0.10546875))
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        arrows.bodyShift =  function () {
+            var k = (height*0.1875)/(height*0.375);
+            return function (A, B) {
+                return {
+                    x: Math.abs(A.x - B.x)*k,
+                    y: Math.abs(A.y - B.y)*k
+                };
+            }
+        }();
+
+
+        Object.defineProperty(arrows[0], "bodyTopLeft", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[0].headBottom, arrows[0].headBottomLeft);
+                return {
+                    x: arrows[0].headBottom.x - shift.x,
+                    y: arrows[0].headBottom.y - shift.y
+                };
+            }
+
+        });
+        Object.defineProperty(arrows[0], "bodyTopRight", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[0].headBottom, arrows[0].headBottomRight);
+                return {
+                    x: arrows[0].headBottom.x + shift.x,
+                    y: arrows[0].headBottom.y + shift.y
+                };
+            }
+
+        });
+
+        Object.defineProperty(arrows[0], "bodyBottom", {
+            get: function () {
+                if (arrows[0].headBottom.y === (topPoint.y + height)) {
+                    return {
+                        x: arrows[0].headBottom.x + (height*0.6428571428571429),
+                        y: (topPoint.y + height)
+                    };
+                } else {
+                    var dist = distance(arrows[0].headBottom, {
+                x: topPoint.x - ((height*0.5773502691896258)),
+                y: topPoint.y + height
+            });
+                    if (dist<(height*0.6428571428571429)){
+                        return {
+                            x: (topPoint.x - ((height*0.5773502691896258))) + (height*0.6428571428571429) - dist,
+                            y: (topPoint.y + height)
+                        }
+                    } else {
+                        return {
+                            x: arrows[0].headBottom.x - (height*0.6428571428571429) / 2,
+                            y: arrows[0].headBottom.y + ((height*0.6428571428571429) * 1.732050807568877) / 2
+                        };
+                    }
+
+                }
+            }
+
+        });
+        Object.defineProperty(arrows[0], "bodyBottomLeft", {
+            get: function () {
+                if (arrows[0].bodyBottom.y === (topPoint.y + height)){
+                    if (arrows[0].bodyBottom.x>(topPoint.x - ((height*0.5773502691896258)))+(height*0.10546875)){
+                        return {
+                            x: arrows[0].bodyBottom.x,
+                            y: arrows[0].bodyBottom.y - (height*0.1875)/2
+                        };
+                    } else {
+                        var kx = 1 + ((height*0.1875)*1.732050807568877)/((height*0.10546875)*4);
+                        var bx = ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*(1-kx);
+                        var ky = - (height*0.1875)/((height*0.10546875)*4);
+                        var by = (topPoint.y + height) - (height*0.1875)/2 - ky*((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875));
+                        return {
+                            x: kx*arrows[0].bodyBottom.x + bx,
+                            y: ky*arrows[0].bodyBottom.x + by
+                        }
+                    }
+
+                } else {
+                    return {
+                        x: arrows[0].bodyBottom.x - 1.732050807568877*(height*0.1875)/4,
+                        y: arrows[0].bodyBottom.y - (height*0.1875)/4
+                    };
+                }
+            }
+        });
+        Object.defineProperty(arrows[0], "bodyBottomRight", {
+            get: function () {
+                if (arrows[0].bodyBottom.y === (topPoint.y + height)){
+                    if (arrows[0].bodyBottom.x>(topPoint.x - ((height*0.5773502691896258)))+(height*0.10546875)){
+                        return {
+                            x: arrows[0].bodyBottom.x,
+                            y: arrows[0].bodyBottom.y + (height*0.1875)/2
+                        };
+                    } else {
+                        var kx = 1 - ((height*0.1875)*1.732050807568877)/(4*(height*0.10546875));
+                        var bx = ((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875))*(1 - kx);
+                        var ky = (height*0.1875)/(4*(height*0.10546875));
+                        var by = (topPoint.y + height) + (height*0.1875)/2 - ky*((topPoint.x - ((height*0.5773502691896258))) + (height*0.10546875));
+                        return {
+                            x: kx*arrows[0].bodyBottom.x + bx,
+                            y: ky*arrows[0].bodyBottom.x + by
+                        };
+                    }
+                } else {
+                    return {
+                        x: arrows[0].bodyBottom.x + 1.732050807568877*(height*0.1875)/4,
+                        y: arrows[0].bodyBottom.y + (height*0.1875)/4
+                    };
+                }
+            }
+        });
+
+        Object.defineProperties(arrows[1].top, {
+            x: {
+                get: function () {
+                    return topPoint.x + ((height*0.5773502691896258))*comleteAnimationPart;
+                }
+            },
+            y: {
+                get: function () {
+                    return topPoint.y + 1.732050807568877*(this.x - topPoint.x);
+                }
+            }
+        });
+        Object.defineProperties(arrows[1].headBottom, {
+            x:{
+                get: function () {
+                    return (arrows.turnHead)?
+                        (topPoint.x - ((height*0.10546875)-(height*1.154700538379252*comleteAnimationPart))/2):
+                        (arrows[1].top.x - (height*0.10546875)/2);
+                }
+            },
+            y: {
+                get: function () {
+                    return (arrows.turnHead)?
+                        (topPoint.y+1.732050807568877*((height*0.10546875)-(height*1.154700538379252*comleteAnimationPart))/2):
+                        (arrows[1].top.y - 1.732050807568877*(height*0.10546875)/2);
+                }
+            }
+        });
+        Object.defineProperties(arrows[1].headBottomRight, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1;
+                        var b = topPoint.x - (height*0.10546875)/2 - (height*0.375)*1.732050807568877/4 - k*(topPoint.x - (height*0.10546875)/2);
+                    } else {
+                        k = 1;
+                        b = topPoint.x - (height*0.375)*1.732050807568877/4 - k*topPoint.x;
+                    }
+                    return k*arrows[1].headBottom.x + b;
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = (height*0.375)/(height*0.10546875) - 1.732050807568877;
+                        var b = topPoint.y + 1.732050807568877*(height*0.10546875)/2 - (height*0.375)/4 - k*(topPoint.x - (height*0.10546875)/2);
+                    } else {
+                        k = 1.732050807568877;
+                        b = topPoint.y + (height*0.375)/4 - k*topPoint.x;
+                    }
+                    return k*arrows[1].headBottom.x + b;
+                }
+            }
+        });
+        Object.defineProperties(arrows[1].headBottomLeft, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1;
+                        var b = topPoint.x - (height*0.10546875)/2 + (height*0.375)*1.732050807568877/4 - k*(topPoint.x - (height*0.10546875)/2);
+                    } else {
+                        k = 1;
+                        b = topPoint.x + (height*0.375)*1.732050807568877/4 - k*topPoint.x;
+                    }
+                    return k*arrows[1].headBottom.x + b;
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = - 1.732050807568877 - (height*0.375)/(height*0.10546875);
+                        var b = topPoint.y + (height*0.10546875)*1.732050807568877/2 + (height*0.375)/4 - k*(topPoint.x - (height*0.10546875)/2);
+                    } else {
+                        k = 1.732050807568877;
+                        b = topPoint.y - (height*0.375)/4 - k*topPoint.x;
+                    }
+                    return k*arrows[1].headBottom.x + b;
+                }
+            }
+        });
+
+        Object.defineProperty(arrows[1], "headTurnPointRight", {
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: -((height*0.375)*1.732050807568877*arrows[1].headBottom.x)/(2*(height*0.10546875)) + topPoint.x + ((height*0.375)*1.732050807568877*(topPoint.x - (height*0.10546875)/2))/(2*(height*0.10546875)),
+                        y: ((height*0.375)*arrows[1].headBottom.x)/(2*(height*0.10546875)) + topPoint.y - ((height*0.375)*(topPoint.x - (height*0.10546875)/2))/(2*(height*0.10546875))
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+        Object.defineProperty(arrows[1], "headTurnPointLeft", {
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: ((height*0.375)*1.732050807568877*arrows[1].headBottom.x)/(2*(height*0.10546875)) + topPoint.x - ((height*0.375)*1.732050807568877*(topPoint.x - (height*0.10546875)/2))/(2*(height*0.10546875)),
+                        y: -((height*0.375)*arrows[1].headBottom.x)/(2*(height*0.10546875)) + topPoint.y + ((height*0.375)*(topPoint.x - (height*0.10546875)/2))/(2*(height*0.10546875))
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        Object.defineProperty(arrows[1], "bodyTopLeft", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[1].headBottom, arrows[1].headBottomRight);
+                return {
+                    x: arrows[1].headBottom.x + shift.x,
+                    y: (arrows[1].headBottom.x<(topPoint.x - (height*0.10546875)/4))?(arrows[1].headBottom.y + shift.y):(arrows[1].headBottom.y - shift.y)
+                };
+            }
+
+        });
+        Object.defineProperty(arrows[1], "bodyTopRight", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[1].headBottom, arrows[1].headBottomLeft);
+                return {
+                    x: arrows[1].headBottom.x - shift.x,
+                    y: (arrows[1].headBottom.x<(topPoint.x - (height*0.10546875)/4))?(arrows[1].headBottom.y - shift.y):(arrows[1].headBottom.y + shift.y)
+                };
+            }
+
+        });
+
+        Object.defineProperty(arrows[1], "bodyBottom", {
+            get: function () {
+                if (arrows[1].headBottom.x<=topPoint.x){
+                    return {
+                        x: arrows[1].headBottom.x - (height*0.6428571428571429)/2,
+                        y: arrows[1].headBottom.y + ((height*0.6428571428571429)*1.732050807568877)/2
+                    };
+                } else {
+                    var dist = distance(arrows[1].headBottom, topPoint);
+                    if (dist<(height*0.6428571428571429)){
+                        var shiftOnSide = ((height*0.6428571428571429) - dist)/2;
+                        return {
+                            x: topPoint.x - shiftOnSide,
+                            y: topPoint.y + shiftOnSide*1.732050807568877
+                        };
+                    } else {
+                        return {
+                            x: arrows[1].headBottom.x - (height*0.6428571428571429)/2,
+                            y:  arrows[1].headBottom.y - ((height*0.6428571428571429)*1.732050807568877)/2
+                        }
+                    }
+                }
+            }
+        });
+        Object.defineProperty(arrows[1], "bodyBottomRight", {
+            get: function () {
+                if (arrows[1].bodyBottom.x<topPoint.x){
+                    if (arrows[1].bodyBottom.x<topPoint.x-(height*0.10546875)/2){
+                        return {
+                            x: arrows[1].bodyBottom.x - 1.732050807568877*(height*0.1875)/4,
+                            y: arrows[1].bodyBottom.y - (height*0.1875)/4
+                        };
+                    } else {
+                        var ky = (height*0.1875)/(height*0.10546875) - 1.732050807568877;
+                        var by = topPoint.y + (height*0.10546875)*1.732050807568877/2 - (height*0.1875)/4 - ky*(topPoint.x - (height*0.10546875)/2);
+                        return {
+                            x: arrows[1].bodyBottom.x - 1.732050807568877*(height*0.1875)/4,
+                            y: ky*arrows[1].bodyBottom.x + by
+                        };
+                    }
+                } else {
+                    return {
+                        x: arrows[1].bodyBottom.x - 1.732050807568877*(height*0.1875)/4,
+                        y: arrows[1].bodyBottom.y + (height*0.1875)/4
+                    };
+                }
+            }
+        });
+        Object.defineProperty(arrows[1], "bodyBottomLeft", {
+            get: function () {
+                if (arrows[1].bodyBottom.x<topPoint.x){
+                    if (arrows[1].bodyBottom.x<topPoint.x-(height*0.10546875)/2){
+                        return {
+                            x: arrows[1].bodyBottom.x + 1.732050807568877*(height*0.1875)/4,
+                            y: arrows[1].bodyBottom.y + (height*0.1875)/4
+                        };
+                    } else {
+                        var ky = -(height*0.1875)/(height*0.10546875) - 1.732050807568877;
+                        var by = topPoint.y + (height*0.10546875)*1.732050807568877/2 + (height*0.1875)/4 - ky*(topPoint.x - (height*0.10546875)/2);
+                        return{
+                            x: arrows[1].bodyBottom.x + 1.732050807568877*(height*0.1875)/4,
+                            y: ky*arrows[1].bodyBottom.x + by
+                        }
+                    }
+
+                } else {
+                    return {
+                        x: arrows[1].bodyBottom.x + 1.732050807568877*(height*0.1875)/4,
+                        y: arrows[1].bodyBottom.y - (height*0.1875)/4
+                    };
+                }
+            }
+        });
+
+
+        Object.defineProperties(arrows[2].top, {
+            x: {
+                get: function () {
+                    return (topPoint.x + ((height*0.5773502691896258))) - (height*1.154700538379252)*comleteAnimationPart;
+                }
+            },
+            y: {
+                get: function () {
+                    return (topPoint.y + height)
+                }
+            }
+        });
+        Object.defineProperties(arrows[2].headBottom, {
+            x:{
+                get: function () {
+                    return (arrows.turnHead)?
+                        ((topPoint.x + ((height*0.5773502691896258))) - ((height*0.10546875)-(height*1.154700538379252*comleteAnimationPart))/2):
+                        (arrows[2].top.x + (height*0.10546875));
+                }
+            },
+            y:{
+                get: function () {
+                    return (arrows.turnHead)?
+                        ((topPoint.y + height) - 1.732050807568877*((height*0.10546875)-(height*1.154700538379252*comleteAnimationPart))/2):
+                        (arrows[2].top.y);
+                }
+            }
+        });
+        Object.defineProperties(arrows[2].headBottomRight, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1- (height*0.375)*1.732050807568877/(2*(height*0.10546875));
+                        var b = (topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2 + (height*0.375)*1.732050807568877/4 - k*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                    } else {
+                        k = 1;
+                        b = 0;
+                    }
+                    return k*arrows[2].headBottom.x + b;
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1.732050807568877 - (height*0.375)/(2*(height*0.10546875));
+                        var b = (topPoint.y + height) - (height*0.10546875)*1.732050807568877/2 - (height*0.375)/4 - k*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                    } else {
+                        k = 0;
+                        b = (topPoint.y + height) - (height*0.375)/2;
+                    }
+                    return k*arrows[2].headBottom.x + b;
+                }
+            }
+        });
+        Object.defineProperties(arrows[2].headBottomLeft, {
+            x:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1+ (height*0.375)*1.732050807568877/(2*(height*0.10546875));
+                        var b = (topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2 - (height*0.375)*1.732050807568877/4 - k*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                    } else {
+                        k = 1;
+                        b = 0;
+                    }
+                    return k*arrows[2].headBottom.x + b;
+                }
+            },
+            y:{
+                get: function () {
+                    if (arrows.turnHead){
+                        var k = 1.732050807568877 + (height*0.375)/(2*(height*0.10546875));
+                        var b = (topPoint.y + height) - (height*0.10546875)*1.732050807568877/2 + (height*0.375)/4 - k*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                    } else {
+                        k = 0;
+                        b = (topPoint.y + height)+(height*0.375)/2;
+                    }
+                    return k*arrows[2].headBottom.x + b;
+                }
+            }
+        });
+
+        Object.defineProperty(arrows[2], "headTurnPointRight", {
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: (topPoint.x + ((height*0.5773502691896258))),
+                        y: -((height*0.375)*arrows[2].headBottom.x)/(height*0.10546875) + (topPoint.y + height) + ((height*0.375)*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2))/(height*0.10546875)
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+        Object.defineProperty(arrows[2], "headTurnPointLeft", {
+            get: function () {
+                if (arrows.turnHead){
+                    return {
+                        x: (topPoint.x + ((height*0.5773502691896258))),
+                        y: ((height*0.375)*arrows[2].headBottom.x)/(height*0.10546875) + (topPoint.y + height) - ((height*0.375)*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2))/(height*0.10546875)
+                    };
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        Object.defineProperty(arrows[2], "bodyTopRight", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[2].headBottom, arrows[2].headBottomRight);
+                return {
+                    x: arrows[2].headBottom.x + shift.x,
+                    y: arrows[2].headBottom.y - shift.y
+                };
+            }
+
+        });
+        Object.defineProperty(arrows[2], "bodyTopLeft", {
+            get: function () {
+                var shift = arrows.bodyShift(arrows[2].headBottom, arrows[2].headBottomLeft);
+                return {
+                    x: arrows[2].headBottom.x - shift.x,
+                    y: arrows[2].headBottom.y + shift.y
+                };
+            }
+
+        });
+
+        Object.defineProperty(arrows[2], "bodyBottom", {
+            get: function () {
+                if (arrows[2].headBottom.y < (topPoint.y + height)){
+                    return {
+                        x: arrows[2].headBottom.x - (height*0.6428571428571429)/2,
+                        y: arrows[2].headBottom.y - ((height*0.6428571428571429)*1.732050807568877)/2
+                    };
+                } else {
+                    var dist = distance(arrows[2].headBottom, {
+                x: topPoint.x + ((height*0.5773502691896258)),
+                y: topPoint.y + height
+            });
+                    if (dist<(height*0.6428571428571429)){
+                        var shiftOnSide = ((height*0.6428571428571429) - dist)/2;
+                        return {
+                            x: (topPoint.x + ((height*0.5773502691896258))) - shiftOnSide,
+                            y: (topPoint.y + height) - shiftOnSide*1.732050807568877
+                        };
+                    } else {
+                        return {
+                            x: arrows[2].headBottom.x + (height*0.6428571428571429),
+                            y: (topPoint.y + height)
+                        };
+                    }
+                }
+            }
+        });
+        Object.defineProperty(arrows[2], "bodyBottomLeft", {
+            get: function () {
+                if (arrows[2].bodyBottom.y<(topPoint.y + height)){
+                    if (arrows[2].bodyBottom.y<(topPoint.y + height)-(height*0.10546875)*1.732050807568877/2){
+                        return {
+                            x: arrows[2].bodyBottom.x - 1.732050807568877*(height*0.1875)/4,
+                            y: arrows[2].bodyBottom.y + (height*0.1875)/4
+                        };
+                    } else {
+                        var kx = 1 + ((height*0.1875)*1.732050807568877)/(2*(height*0.10546875));
+                        var bx = ((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2)*(1-kx) - ((height*0.1875)*1.732050807568877)/4;
+                        var ky = (height*0.1875)/(2*(height*0.10546875)) + 1.732050807568877;
+                        var by = (topPoint.y + height) - ((height*0.10546875)*1.732050807568877)/2 + (height*0.1875)/4 - ky*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                        return {
+                            x: kx*arrows[2].bodyBottom.x + bx,
+                            y: ky*arrows[2].bodyBottom.x + by
+                        };
+                    }
+                } else {
+                    return {
+                        x: arrows[2].bodyBottom.x,
+                        y: arrows[2].bodyBottom.y + (height*0.1875)/2
+                    };
+                }
+            }
+        });
+        Object.defineProperty(arrows[2], "bodyBottomRight", {
+            get: function () {
+                if (arrows[2].bodyBottom.y<(topPoint.y + height)){
+                    if (arrows[2].bodyBottom.y<(topPoint.y + height)-(height*0.10546875)*1.732050807568877/2){
+                        return {
+                            x: arrows[2].bodyBottom.x + 1.732050807568877*(height*0.1875)/4,
+                            y: arrows[2].bodyBottom.y - (height*0.1875)/4
+                        };
+                    } else {
+                        var kx = 1 - ((height*0.1875)*1.732050807568877)/(2*(height*0.10546875));
+                        var bx = ((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2)*(1-kx) + ((height*0.1875)*1.732050807568877)/4;
+                        var ky = 1.732050807568877 - (height*0.1875)/(2*(height*0.10546875));
+                        var by =(topPoint.y + height) - ((height*0.10546875)*1.732050807568877)/2 - (height*0.1875)/4 - ky*((topPoint.x + ((height*0.5773502691896258))) - (height*0.10546875)/2);
+                        return {
+                            x: kx*arrows[2].bodyBottom.x + bx,
+                            y: ky*arrows[2].bodyBottom.x + by
+                        }
+                    }
+
+                } else {
+                    return {
+                        x: arrows[2].bodyBottom.x,
+                        y: arrows[2].bodyBottom.y - (height*0.1875)/2
+                    };
+                }
+            }
+        });
+
+        arrows.draw = function () {
+            this.forEach(drawArrow);
+            return;
+        };
+
+
+
+        function drawArrow(arrow, num, arrows) {
+            ctx.lineWidth = 2;
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+            ctx.fillStyle = "rgb(99, 192, 29)";
+
+            if (arrows.turnHead){
+                startDraw(arrow.headBottomLeft);
+                line(arrow.bodyTopLeft);
+                bezier(arrow.bodyTurnPointsLeft[0], arrow.bodyBottomLeft);
+                line(arrow.bodyBottomRight);
+                bezier(arrow.bodyTurnPointsRight[0], arrow.bodyTopRight);
+                line(arrow.headBottomRight);
+                ctx.stroke();
+
+                startDraw(arrow.top);
+                bezier(arrow.headTurnPointLeft, arrow.headBottomLeft);
+                line(arrow.bodyTopLeft);
+                bezier(arrow.bodyTurnPointsLeft[0], arrow.bodyBottomLeft);
+                line(arrow.bodyBottomRight);
+                bezier(arrow.bodyTurnPointsRight[0], arrow.bodyTopRight);
+                line(arrow.headBottomRight);
+                bezier(arrow.headTurnPointRight, arrow.top);
+                ctx.fill();
+
+                startDraw(arrow.headBottomLeft);
+                bezier(arrow.headTurnPointLeft, arrow.top);
+                bezier(arrow.headTurnPointRight, arrow.headBottomRight);
+                ctx.stroke();
+
+                startDraw(arrow.headBottomRight);
+                bezier2(arrow.headTurnPointRight, arrow.headTurnPointLeft, arrow.headBottomLeft);
+                bezier(arrow.headTurnPointLeft, arrow.top);
+                bezier(arrow.headTurnPointRight, arrow.headBottomRight);
+                ctx.fill();
+            } else if (arrows.turnBody){
+                startDraw(arrow.bodyBottomRight);
+                line(arrow.bodyBottomLeft);
+                bezier(arrow.bodyTurnPointsLeft[1], arrow.bodyTopLeft);
+                ctx.stroke();
+
+                startDraw(arrow.bodyTopLeft);
+                line(arrow.bodyTopRight);
+                bezier(arrow.bodyTurnPointsRight[1], arrow.bodyBottomRight);
+                line(arrow.bodyBottomLeft);
+                bezier(arrow.bodyTurnPointsLeft[1], arrow.bodyTopLeft);
+                ctx.fill();
+
+                startDraw(arrow.bodyTopLeft);
+                bezier2(
+                    arrow.bodyTurnPointsLeft[1],
+                    arrow.bodyTurnPointsRight[1],
+                    arrow.bodyBottomRight
+                );
+                bezier(arrow.bodyTurnPointsRight[1], arrow.bodyTopRight);
+                line(arrow.headBottomRight);
+                ctx.fill();
+
+                startDraw(arrow.headBottomLeft);
+                line(arrow.top);
+                line(arrow.headBottomRight);
+                line(arrow.headBottomLeft);
+                ctx.fill();
+
+                startDraw(arrow.bodyTopLeft);
+                line(arrow.headBottomLeft);
+                line(arrow.top);
+                line(arrow.headBottomRight);
+                line(arrow.bodyTopRight);
+                bezier(arrow.bodyTurnPointsRight[1], arrow.bodyBottomRight);
+                ctx.stroke();
+
+
+            } else {
+                ctx.beginPath();
+                ctx.moveTo(arrow.top.x, arrow.top.y);
+                line(arrow.headBottomRight);
+                line(arrow.bodyTopRight);
+                line(arrow.bodyBottomRight);
+                line(arrow.bodyBottomLeft);
+                line(arrow.bodyTopLeft);
+                line(arrow.headBottomLeft);
+                line(arrow.top);
+                ctx.fill();
+                ctx.stroke();
+            }
+            return;
+        }
+
+        function startDraw (fromPnt){
+            ctx.beginPath();
+            ctx.moveTo(fromPnt.x, fromPnt.y);
+            return;
+        }
+        function bezier(pnt1, pnt2) {
+            ctx.quadraticCurveTo(pnt1.x, pnt1.y, pnt2.x, pnt2.y);
+            return;
+        }
+        function bezier2(pnt1, pnt2, pnt3) {
+            ctx.bezierCurveTo(pnt1.x, pnt1.y, pnt2.x, pnt2.y, pnt3.x, pnt3.y);
+            return;
+        }
+
+        function line(toPnt) {
+            ctx.lineTo(toPnt.x, toPnt.y);
+            return;
+        }
+
+        /*####################################################################
+        **              Dev Functions
+        */
+
+
+        var itterationsCounter = 0;
+
+        window.timer = setInterval(function(){
+            if (itterationsCounter<10){
+
+                clearCanvas()
+                    .then(drawCanvas())
+                    .then(function(){
+                        if (comleteAnimationPart<1)
+                            comleteAnimationPart+=step;
+                        else{
+                            itterationsCounter++;
+                            comleteAnimationPart=0;
+                        }
+                        return;
+                    });
+            } else {
+                clearInterval(window.timer);
+            }
+        },1);
+
+        function clearCanvas() {
+            return new Promise(function (resolve) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                resolve();
+                return;
+            });
+        }
+        function drawCanvas() {
+            return new Promise(function (resolve) {
+                arrows.draw();
+                resolve();
+                return;
+            });
+        }
+
+        function distance(A, B) {
+            return Math.sqrt(Math.pow((A.x - B.x),2) + Math.pow((A.y - B.y),2));
+        }
+        function drawPoint(pnt) {
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            var x = Math.round(pnt.x);
+            var y = Math.round(pnt.y);
+            var radius = 2;
+            ctx.beginPath();
+            ctx.moveTo(x+radius, y);
+            ctx.arc(x, y, radius, 0, 2*Math.PI, true);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(99, 192, 29, 0.5)';
+            return;
+       }
+        /*
+        **              End. Dev Functions
+        */
+        return function () {
+            return arrows;
+        };
+    }
+</script>
+</body>
+</html>

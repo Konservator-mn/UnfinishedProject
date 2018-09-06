@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        var startTime = Date.now();
+    </script>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            margin: 0px;
+        }
+    </style>
+    <title>Canvas</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight-4;
+    var ctx = canvas.getContext('2d');
+    Recycling(canvas.height/3, {x:canvas.width/2, y: canvas.height/3}, 5000);
+
+    function Recycling (height, topPoint, time) {
+
+        var step = 1/time;
+        var comleteAnimationPart = 0;
+
+
+        var sqrt3 = Math.sqrt(3);
+        var heightDivSqrt = height/sqrt3;
+
+        var triangle = [
+            {
+                x: topPoint.x - heightDivSqrt,
+                y: topPoint.y + height
+            },
+            topPoint,
+            {
+                x: topPoint.x + heightDivSqrt,
+                y: topPoint.y + height
+            }
+        ];
+
+        var arrowParams = {
+            head: {
+                height: 3*height/8,
+                width: 6*height/16 // 5/8 = 0.625
+            },
+            body: {
+                height: 9*height/16,
+                width: 3*height/16
+            }
+        };
+
+
+
+
+
+
+        /*####################################################################
+        **              Dev Functions
+        */
+
+        function whatToDraw() {
+
+            return;
+        }
+
+        var itterationsCounter = 0;
+
+        var timer = setInterval(function(){
+            if (itterationsCounter<3){
+
+                clearCanvas()
+                    .then(drawCanvas())
+                    .then(function(){
+                        if (comleteAnimationPart<1)
+                            comleteAnimationPart+=step;
+                        else{
+                            itterationsCounter++;
+                            comleteAnimationPart=0;
+                        }
+                        return;
+                    });
+            } else {
+                clearInterval(timer);
+            }
+        },1);
+
+        function clearCanvas() {
+            return new Promise(function (resolve) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                resolve();
+                return;
+            });
+        }
+        function drawCanvas() {
+            return new Promise(function (resolve) {
+                whatToDraw();
+                resolve();
+                return;
+            });
+        }
+
+        function distance(A, B) {
+            return Math.sqrt(Math.pow((A.x - B.x),2) + Math.pow((A.y - B.y),2));
+        }
+        function bezier2(pnt1, pnt2, pnt3) {
+            var cp1x = Math.round(pnt1.x);
+            var cp1y = Math.round(pnt1.y);
+            var cp2x = Math.round(pnt2.x);
+            var cp2y = Math.round(pnt2.y);
+            var cp3x = Math.round(pnt3.x);
+            var cp3y = Math.round(pnt3.y);
+            ctx.beginPath();
+            ctx.moveTo(cp1x, cp1y);
+            ctx.quadraticCurveTo(cp2x, cp2y, cp3x, cp3y);
+            ctx.stroke();
+            return;
+        }
+        function bezier3(pnt1, pnt2, pnt3, pnt4) {
+            var cp1x = Math.round(pnt1.x);
+            var cp1y = Math.round(pnt1.y);
+            var cp2x = Math.round(pnt2.x);
+            var cp2y = Math.round(pnt2.y);
+            var cp3x = Math.round(pnt3.x);
+            var cp3y = Math.round(pnt3.y);
+            var cp4x = Math.round(pnt4.x);
+            var cp4y = Math.round(pnt4.y);
+            ctx.beginPath();
+            ctx.moveTo(cp1x, cp1y);
+            ctx.bezierCurveTo(cp2x, cp2y, cp3x, cp3y, cp4x, cp4y);
+            ctx.stroke();
+            return;
+        }
+        function drawManyCircles(crcls) {
+            crcls.forEach(function (crcl) {
+                drawCircle(crcl, cR);
+            });
+        }
+        function drawCircle(center, radius) {
+            ctx.beginPath();
+            ctx.moveTo(center.x+radius, center.y);
+            ctx.arc(center.x, center.y, radius, 0, 2*Math.PI, true);
+            ctx.stroke();
+            return;
+        }
+        function drawManyPoints(pnts) {
+            pnts.forEach(function (pnt) {
+                drawPoint(pnt);
+            });
+            return;
+        }
+        function drawPoint(pnt) {
+            var x = Math.round(pnt.x);
+            var y = Math.round(pnt.y);
+            var radius = 2;
+            ctx.beginPath();
+            ctx.moveTo(x+radius, y);
+            ctx.arc(x, y, radius, 0, 2*Math.PI, true);
+            ctx.fill();
+            return;
+        }
+        function drawTriangle(A, B, C) {
+            drawLine(A,B);
+            drawLine(B,C);
+            drawLine(C,A);
+            return;
+        }
+        function drawLine(A, B) {
+            var A = {
+                x:Math.round(A.x),
+                y:Math.round(A.y)
+            };
+            var B = {
+                x:Math.round(B.x),
+                y:Math.round(B.y)
+            };
+            ctx.beginPath();
+            ctx.moveTo(A.x, A.y);
+            ctx.lineTo(B.x, B.y);
+            ctx.stroke();
+            return;
+        }
+        /*
+        **              End. Dev Functions
+        */
+    }
+</script>
+</body>
+</html>

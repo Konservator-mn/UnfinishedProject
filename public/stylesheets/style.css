@@ -1,0 +1,441 @@
+body {
+  background-image: url("../images/bg.jpg");
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-size: 25px;
+}
+li {
+  list-style: none;
+}
+#wrap {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-items: stretch;
+  justify-content: center;
+}
+
+header {
+  padding: 1em 0px 0px 0px;
+  background: rgba(0, 0, 0, 0.3);
+}
+header table {
+  border-spacing: 2px;
+}
+
+h1 {
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0.3em;
+}
+
+.headertext {
+  color: rgb(250, 250, 250);
+  font-weight: 700;
+  text-shadow: rgb(255, 181, 44) 0px 0px 10px;
+}
+
+#slider {
+  min-height: 300px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  border-top: 3px solid rgb(255, 181, 44);
+}
+#slider>#arrow-left, #slider>#arrow-right {
+  width: 0px;
+  height: 0px;
+  border-top: 80px solid transparent;
+  border-bottom: 80px solid transparent;
+  margin: 30px;
+  align-self: center;
+  z-index: 1;
+}
+#slider>#arrow-left:hover, #slider>#arrow-right:hover{
+  cursor: pointer;
+}
+#slider>#arrow-left{
+  border-left: 0px;
+  border-right: 30px solid rgba(255, 255, 255, 0.7);
+}
+#slider>#arrow-right{
+  border-left: 30px solid rgba(255, 255, 255, 0.7);
+  border-right: 0px;
+}
+#visible-image{
+  flex-grow: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 25px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-bottom: 3px solid rgb(255, 181, 44);
+}
+#visible-image>ul{
+  width: 9999px;
+  z-index: -1;
+  height: 100%;
+  margin-before: 0px;
+  margin-after: 0px;
+  margin-start: 0px;
+  margin-end: 0px;
+  padding-start: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+}
+
+.slider-item {
+  display: inline-block;
+  margin-right: 25px;
+}
+
+
+.slider-item>h2{
+  text-align: center;
+  -webkit-margin-before: 0.3em;
+  -webkit-margin-after: 0.3em;
+}
+.slider-image{
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#contacts-wrap {
+  width: 100%;
+}
+
+#contacts-wrap h2 {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  padding: 0.3em;
+  word-spacing: 0.4em;
+}
+
+#contacts-wrap h2>div {
+  width: 1.17em;
+  height: 1.17em;
+  display: inline-block;
+  margin-left: 1em;
+  background-image: url('../images/icons/24-7.png');
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+#contacts {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+#contacts>ul{
+
+  margin-before: 0px;
+  margin-after: 0px;
+  margin-start: 0px;
+  margin-end: 0px;
+  padding-start: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+  display: flex;
+}
+
+#contacts>ul>li{
+  margin-left: 0.3em;
+}
+
+#contacts>ul:last-child{
+  flex-direction: column;
+  margin-left: 1em;
+  justify-content: space-around;
+}
+
+#contacts>ul:last-child>li{
+  padding: 0.2em;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.phones {
+    font-size: 1.3em;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(255, 181, 44) 0px 0px 10px;
+}
+
+footer{
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+footer>menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+}
+
+.footer-item {
+  flex-grow: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.footer-item:not(:last-child){
+  border-right: 3px solid rgba(255, 255, 255, 0.7);
+}
+
+.button-action:hover, .button-inaction {
+  box-shadow: inset 0px 0px 10px 2px rgb(255, 181, 44);
+}
+
+#footer-menu-windows>div{
+    background-color: rgba(255, 255, 255, 0.4);
+}
+.close-button{
+    width: 40px;
+    height: 40px;
+    background-color: black;
+}
+
+/*body {
+  font: 14px;
+}
+
+a {
+  color: #00B7FF;
+}
+
+
+
+#wrap {
+  max-width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+}
+
+
+header{
+  padding-top: 25px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+  margin: 0px;
+  color: rgb(250, 250, 250);
+  font-size: 4em;
+  font-weight: 700;
+  text-align: left;
+  text-shadow: rgb(255, 181, 44) 0px 0px 10px;
+}
+
+header>h1:nth-child(2) {
+  padding-bottom: 20px;
+}
+header h2 {
+  font-size: 3em;
+  margin: 0px;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+table{
+  border-spacing: 0px;
+}
+td {
+  padding: 0px;
+}
+.icon-container{
+  height: 140px;
+  width: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+#phones li{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 3em;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+}
+
+#messangers .icon-container:hover, #phones li:hover{
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0px 0px 10px 2px rgb(255, 181, 44);
+  border-color: rgba(255, 255, 255, 0);
+
+}
+.icon-container img {
+  height: 90%;
+  width: 90%;
+}
+
+
+header #contacts{
+  max-width: 100%;
+  background: rgba(250, 250, 250, 0.6);
+  padding-bottom: 10px;
+}
+header #contacts ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0px 5px 0px 5px;
+  margin: 0px;
+}
+header a {
+  text-decoration: none;
+  padding: 10px;
+}
+li {
+  list-style: none;
+}
+
+.messangers-icons{
+  width: 70px;
+  height: 70px;
+}
+main {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main h3 {
+  color: rgb(255, 255, 255);
+  font-size: 2em;
+  line-height: 1.5em;
+  text-align: center;
+}
+
+#actions {
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-padding-start: 0px;
+}
+
+.act{
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25%;
+  max-width: 30%;
+  padding: 1em;
+  background: rgba(0, 0, 0, 0.4);
+}
+.act-hovered{
+  box-shadow: inset 0px 0px 10px 2px rgb(255, 181, 44);
+  border-color: rgb(255, 181, 44);
+  color: rgb(255, 181, 44);
+  text-shadow: rgb(255, 181, 44) 0px 0px 10px;
+}
+
+.act>h3{
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 1em;
+}
+
+.action-pic {
+  max-width: 80%;
+  width: 80%;
+  height: 10em;
+  background-repeat: no-repeat;
+  background-position: center top;
+  border-radius: 10px;
+  background-size: auto 10em;
+}
+
+.act:nth-child(1) .action-pic{
+  background-image: url("/images/cut.jpg");
+}
+.act:nth-child(2) .action-pic{
+  background-image: url("/images/unmount.jpg");
+}
+.act:nth-child(3) .action-pic{
+  background-image: url("/images/vyvoz.jpg");
+}
+
+#map-wrap {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  background: rgba(255, 255, 255, 0.5);
+}
+#map-wrap>h3{
+  background: rgba(0, 0, 0, 0.3);
+  padding-top:10px;
+  padding-bottom: 10px;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+#map-wrap>h3>img{
+  max-height: 1.5em;
+  margin-left: 10px;
+}
+
+#map-wrap>ul{
+  max-width: 80%;
+}
+
+#map-wrap>ul>li, #map-wrap>ul>li>img{
+  max-width: 100%;
+}
+
+#phone-call-wrap {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  position: fixed;
+  right: 70px;
+  bottom: 70px;
+  background-image: url("../images/phone.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-shadow: 0px 0px 30px 10px rgb(22, 204, 31);
+}
+#phone-call-wrap>a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}*/
+
